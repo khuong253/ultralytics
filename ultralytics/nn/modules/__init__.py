@@ -62,6 +62,7 @@ from .conv import (
     RepConv,
     SpatialAttention,
     GAM_Attention,
+    space_to_depth,
 )
 from .head import OBB, Classify, Detect, Pose, RTDETRDecoder, Segment, WorldDetect
 from .transformer import (
@@ -136,5 +137,6 @@ __all__ = (
     "CBFuse",
     "CBLinear",
     "Silence",
-    'GAM_Attention',
+    "GAM_Attention",
+    "space_to_depth",
 )

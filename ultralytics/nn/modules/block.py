@@ -37,6 +37,7 @@ __all__ = (
     "CBFuse",
     "CBLinear",
     "Silence",
+    "space_to_depth",
 )
 
 
@@ -321,6 +322,19 @@ class GhostBottleneck(nn.Module):
         """Applies skip connection and concatenation to input tensor."""
         return self.conv(x) + self.shortcut(x)
 
+class space_to_depth(nn.Module):
+    # Changing the dimension of the Tensor
+    def __init__(self, dimension=1):
+        super().__init__()
+        self.d = dimension
+
+    def forward(self, x):
+        #return torch.cat([x[..., ::2, ::2], x[..., 1::2, ::2], x[..., ::2, 1::2], x[..., 1::2, 1::2]], 1)
+        size_tensor = x.size()
+        return torch.cat([x[...,0:size_tensor[2]//2,0:size_tensor[3]//2],
+            x[...,0:size_tensor[2]//2,size_tensor[3]//2:],
+            x[...,size_tensor[2]//2:,0:size_tensor[3]//2],
+            x[...,size_tensor[2]//2:,size_tensor[3]//2:]],1)
 
 class Bottleneck(nn.Module):
     """Standard bottleneck."""
