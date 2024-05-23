@@ -26,6 +26,7 @@ from .block import (
     SPP,
     SPPELAN,
     SPPF,
+    SPPFCSPC,
     ADown,
     BNContrastiveHead,
     Bottleneck,
@@ -62,7 +63,6 @@ from .conv import (
     RepConv,
     SpatialAttention,
     GAM_Attention,
-    SPPFCSPC,
     space_to_depth,
 )
 from .head import OBB, Classify, Detect, Pose, RTDETRDecoder, Segment, WorldDetect
