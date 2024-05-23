@@ -63,6 +63,7 @@ from .conv import (
     SpatialAttention,
     GAM_Attention,
     SPPFCSPC,
+    space_to_depth,
 )
 from .head import OBB, Classify, Detect, Pose, RTDETRDecoder, Segment, WorldDetect
 from .transformer import (
@@ -139,4 +140,5 @@ __all__ = (
     "Silence",
     "GAM_Attention",
     "SPPFCSPC",
+    "space_to_depth",
 )

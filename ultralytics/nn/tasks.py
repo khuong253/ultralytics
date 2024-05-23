@@ -52,6 +52,7 @@ from ultralytics.nn.modules import (
     GAM_Attention,
     CBAM,
     SPPFCSPC,
+    space_to_depth,
 )
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, colorstr, emojis, yaml_load
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
@@ -1069,7 +1070,7 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             GhostBottleneck,
             SPP,
             SPPF,
-            SPPFCPSC,
+            SPPFCSPC,
             DWConv,
             Focus,
             BottleneckCSP,
@@ -1132,6 +1133,8 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             args = [c1, c2, *args[1:]]
         elif m is CBFuse:
             c2 = ch[f[-1]]
+        elif m is space_to_depth:
+            c2 = 4*ch[f]
         else:
             c2 = ch[f]
 

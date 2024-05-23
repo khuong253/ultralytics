@@ -23,6 +23,7 @@ __all__ = (
     "RepConv",
     "GAM_Attention",
     "SPPFCSPC",
+    "space_to_depth",
 )
 
 
@@ -399,3 +400,16 @@ class SPPFCSPC(nn.Module):
         y1 = self.cv6(self.cv5(torch.cat((x1,x2,x3, self.m(x3)),1)))
         y2 = self.cv2(x)
         return self.cv7(torch.cat((y1, y2), dim=1))
+    
+class space_to_depth(nn.Module):
+    # Changing the dimension of the Tensor
+    def __init__(self, dimension=1):
+        super().__init__()
+        self.d = dimension
+
+    def forward(self, x):
+        size_tensor = x.size()
+        return torch.cat([x[...,0:size_tensor[2]//2,0:size_tensor[3]//2],
+                        x[...,0:size_tensor[2]//2,size_tensor[3]//2:],
+                        x[...,size_tensor[2]//2:,0:size_tensor[3]//2],
+                        x[...,size_tensor[2]//2:,size_tensor[3]//2:]  ],1)
