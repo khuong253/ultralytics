@@ -869,6 +869,7 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             GhostConv,
             Bottleneck,
             GhostBottleneck,
+            SPPFCSPC,
             SPP,
             SPPF,
             DWConv,
