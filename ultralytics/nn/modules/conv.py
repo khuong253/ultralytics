@@ -414,15 +414,16 @@ class space_to_depth(nn.Module):
     #                     x[...,size_tensor[2]//2:,0:size_tensor[3]//2],
     #                     x[...,size_tensor[2]//2:,size_tensor[3]//2:]  ],1)
 
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, demension = 1):
         super(space_to_depth, self).__init__()
         # Initialize your SPD-Conv parameters or sub-modules here
         self.conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding)
         # Additional SPD-specific parameters
-
+        self.d = demension
     def forward(self, x):
         # Your forward pass implementation
-        return torch.cat([x[..., ::2, ::2], x[..., 1::2, ::2], x[..., ::2, 1::2], x[..., 1::2, 1::2]], 1)  # Example forward pass
+        x = torch.cat([x[..., ::2, ::2], x[..., 1::2, ::2], x[..., ::2, 1::2], x[..., 1::2, 1::2]], 1)  # Example forward pass
+        return self.conv(x)
         # size_tensor = x.size()
         # return torch.cat([x[...,0:size_tensor[2]//2,0:size_tensor[3]//2],
         #                   x[...,0:size_tensor[2]//2,size_tensor[3]//2:],
