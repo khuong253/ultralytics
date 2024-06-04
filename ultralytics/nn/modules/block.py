@@ -15,11 +15,7 @@ __all__ = (
     "SPP",
     "space_to_depth",
     "SPPF",
-<<<<<<< HEAD
     "SPPFCPSC",
-=======
-    "SPPFCSPC",
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
     "C1",
     "C2",
     "C3",
@@ -188,17 +184,10 @@ class SPPF(nn.Module):
         y.extend(self.m(y[-1]) for _ in range(3))
         return self.cv2(torch.cat(y, 1))
 
-<<<<<<< HEAD
 class SPPFCPSC(nn.Module):
     
     def __init__(self, c1, c2, k=5):
         super(SPPFCPSC, self).__init__()
-=======
-class SPPFCSPC(nn.Module):
-    
-    def __init__(self, c1, c2, k=5):
-        super(SPPFCSPC, self).__init__()
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
         c_ = c1//2  # hidden channels
         self.cv1 = Conv(c1, c_, 1, 1)
         self.cv2 = Conv(c1, c_, 1, 1)
@@ -216,12 +205,9 @@ class SPPFCSPC(nn.Module):
         y1 = self.cv6(self.cv5(torch.cat((x1,x2,x3, self.m(x3)),1)))
         y2 = self.cv2(x)
         return self.cv7(torch.cat((y1, y2), dim=1))
-<<<<<<< HEAD
 
 
     
-=======
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
 
 class C1(nn.Module):
     """CSP Bottleneck with 1 convolution."""
@@ -367,6 +353,7 @@ class GhostBottleneck(nn.Module):
     def forward(self, x):
         """Applies skip connection and concatenation to input tensor."""
         return self.conv(x) + self.shortcut(x)
+
 
 class Bottleneck(nn.Module):
     """Standard bottleneck."""

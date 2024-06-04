@@ -19,11 +19,7 @@ from ultralytics.nn.modules import (
     space_to_depth,
     SPPELAN,
     SPPF,
-<<<<<<< HEAD
     SPPFCPSC,
-=======
-    SPPFCSPC,
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
     ADown,
     Bottleneck,
     BottleneckCSP,
@@ -57,13 +53,7 @@ from ultralytics.nn.modules import (
     Segment,
     Silence,
     WorldDetect,
-<<<<<<< HEAD
     ResBlock_CBAM,
-=======
-    GAM_Attention,
-    CBAM,
-    space_to_depth,
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
 )
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, colorstr, emojis, yaml_load
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
@@ -841,6 +831,7 @@ def attempt_load_one_weight(weight, device=None, inplace=True, fuse=False):
     # Return model and ckpt
     return model, ckpt
 
+
 def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
     """Parse a YOLO model.yaml dictionary into a PyTorch model."""
     import ast
@@ -880,14 +871,9 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             GhostConv,
             Bottleneck,
             GhostBottleneck,
-            SPPFCSPC,
             SPP,
             SPPF,
-<<<<<<< HEAD
             SPPFCPSC,
-=======
-            SPPFCSPC,
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
             DWConv,
             Focus,
             BottleneckCSP,
@@ -906,11 +892,7 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             DWConvTranspose2d,
             C3x,
             RepC3,
-<<<<<<< HEAD
             RepConv
-=======
-            GAM_Attention,
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
         }:
             c1, c2 = ch[f], args[0]
             if c2 != nc:  # if c2 not equal to number of classes (i.e. for Classify() output)
@@ -959,17 +941,7 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             args = [c1, c2, *args[1:]]
         elif m is CBFuse:
             c2 = ch[f[-1]]
-<<<<<<< HEAD
         
-=======
-        elif m is CBAM:
-            c1, c2 = ch[f], args[0]
-            if c2 != nc:
-                c2 = make_divisible(min(c2, max_channels) * width, 8)
-            args = [c1, *args[1:]]
-        elif m is space_to_depth:
-            c2 = 4 * ch[f]
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
         else:
             c2 = ch[f]
 
@@ -986,22 +958,6 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
         ch.append(c2)
     return nn.Sequential(*layers), sorted(save)
 
-def yaml_model_load(path):
-    """Load a YOLOv8 model from a YAML file."""
-    import re
-
-    path = Path(path)
-    if path.stem in (f"yolov{d}{x}6" for x in "nsmlx" for d in (5, 8)):
-        new_stem = re.sub(r"(\d+)([nslmx])6(.+)?$", r"\1\2-p6\3", path.stem)
-        LOGGER.warning(f"WARNING ⚠️ Ultralytics YOLO P6 models now use -p6 suffix. Renaming {path.stem} to {new_stem}.")
-        path = path.with_name(new_stem + path.suffix)
-
-    unified_path = re.sub(r"(\d+)([nslmx])(.+)?$", r"\1\3", str(path))  # i.e. yolov8x.yaml -> yolov8.yaml
-    yaml_file = check_yaml(unified_path, hard=False) or check_yaml(path)
-    d = yaml_load(yaml_file)  # model dict
-    d["scale"] = guess_model_scale(path)
-    d["yaml_file"] = str(path)
-    return d
 
 def yaml_model_load(path):
     """Load a YOLOv8 model from a YAML file."""

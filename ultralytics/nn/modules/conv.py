@@ -21,13 +21,7 @@ __all__ = (
     "CBAM",
     "Concat",
     "RepConv",
-<<<<<<< HEAD
     "ResBlock_CBAM"
-=======
-    "GAM_Attention",
-    "SPPFCSPC",
-    "space_to_depth",
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
 )
 
 
@@ -339,7 +333,6 @@ class Concat(nn.Module):
         """Forward pass for the YOLOv8 mask Proto module."""
         return torch.cat(x, self.d)
 
-<<<<<<< HEAD
 
 class ResBlock_CBAM(nn.Module):
     def __init__(self, in_places, places, stride=1, downsampling=False, expansion=1):
@@ -381,87 +374,3 @@ class ResBlock_CBAM(nn.Module):
         return out
 
 
-=======
-def channel_shuffle(x, groups=2):  ##shuffle channel
-    # RESHAPE----->transpose------->Flatten
-    B, C, H, W = x.size()
-    out = x.view(B, groups, C // groups, H, W).permute(0, 2, 1, 3, 4).contiguous()
-    out = out.view(B, C, H, W)
-    return out
-
-class GAM_Attention(nn.Module):
-    def __init__(self, c1, c2, group=True, rate=4):
-        super(GAM_Attention, self).__init__()
-
-        self.channel_attention = nn.Sequential(
-            nn.Linear(c1, int(c1 / rate)),
-            nn.ReLU(inplace=True),
-            nn.Linear(int(c1 / rate), c1)
-        )
-
-        self.spatial_attention = nn.Sequential(
-
-            nn.Conv2d(c1, c1 // rate, kernel_size=7, padding=3, groups=rate) if group else nn.Conv2d(c1, int(c1 / rate),
-                                                                                                     kernel_size=7,
-                                                                                                     padding=3),
-            nn.BatchNorm2d(int(c1 / rate)),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(c1 // rate, c2, kernel_size=7, padding=3, groups=rate) if group else nn.Conv2d(int(c1 / rate), c2,
-                                                                                                     kernel_size=7,
-                                                                                                     padding=3),
-            nn.BatchNorm2d(c2)
-        )
-
-    def forward(self, x):
-        b, c, h, w = x.shape
-        x_permute = x.permute(0, 2, 3, 1).view(b, -1, c)
-        x_att_permute = self.channel_attention(x_permute).view(b, h, w, c)
-        x_channel_att = x_att_permute.permute(0, 3, 1, 2)
-        # x_channel_att=channel_shuffle(x_channel_att,4) #last shuffle
-        x = x * x_channel_att
-
-        x_spatial_att = self.spatial_attention(x).sigmoid()
-        x_spatial_att = channel_shuffle(x_spatial_att, 4)  # last shuffle
-        out = x * x_spatial_att
-        # out=channel_shuffle(out,4) #last shuffle
-        return out
-    
-class SPPFCSPC(nn.Module):
-    
-    def __init__(self, c1, c2, n=1, shortcut=False, g=1, e=0.5, k=5):
-        super(SPPFCSPC, self).__init__()
-        c_ = int(2 * c2 * e)  # hidden channels
-        self.cv1 = Conv(c1, c_, 1, 1)
-        self.cv2 = Conv(c1, c_, 1, 1)
-        self.cv3 = Conv(c_, c_, 3, 1)
-        self.cv4 = Conv(c_, c_, 1, 1)
-        self.m = nn.MaxPool2d(kernel_size=k, stride=1, padding=k // 2)
-        self.cv5 = Conv(4 * c_, c_, 1, 1)
-        self.cv6 = Conv(c_, c_, 3, 1)
-        self.cv7 = Conv(2 * c_, c2, 1, 1)
-
-    def forward(self, x):
-        x1 = self.cv4(self.cv3(self.cv1(x)))
-        x2 = self.m(x1)
-        x3 = self.m(x2)
-        y1 = self.cv6(self.cv5(torch.cat((x1,x2,x3, self.m(x3)),1)))
-        y2 = self.cv2(x)
-        return self.cv7(torch.cat((y1, y2), dim=1))
-    
-class space_to_depth(nn.Module):
-    def __init__(self, in_channels, kernel_size = 3, stride=1, padding=1, demension = 1):
-        super(space_to_depth, self).__init__()
-        # Initialize your SPD-Conv parameters or sub-modules here
-        self.conv = nn.Conv2d(in_channels, kernel_size, stride, padding)
-        # Additional SPD-specific parameters
-        self.d = demension
-    def forward(self, x):
-        # Your forward pass implementation
-        x = torch.cat([x[..., ::2, ::2], x[..., 1::2, ::2], x[..., ::2, 1::2], x[..., 1::2, 1::2]], 1)  # Example forward pass
-        return x
-        # size_tensor = x.size()
-        # return torch.cat([x[...,0:size_tensor[2]//2,0:size_tensor[3]//2],
-        #                   x[...,0:size_tensor[2]//2,size_tensor[3]//2:],
-        #                   x[...,size_tensor[2]//2:,0:size_tensor[3]//2],
-        #                   x[...,size_tensor[2]//2:,size_tensor[3]//2:]  ],1)
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186

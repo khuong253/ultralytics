@@ -26,12 +26,8 @@ from .block import (
     SPP,
     SPPELAN,
     SPPF,
-<<<<<<< HEAD
     SPPFCPSC,
     space_to_depth,
-=======
-    SPPFCSPC,
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
     ADown,
     BNContrastiveHead,
     Bottleneck,
@@ -67,12 +63,7 @@ from .conv import (
     LightConv,
     RepConv,
     SpatialAttention,
-<<<<<<< HEAD
     ResBlock_CBAM,
-=======
-    GAM_Attention,
-    space_to_depth,
->>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
 )
 from .head import OBB, Classify, Detect, Pose, RTDETRDecoder, Segment, WorldDetect
 from .transformer import (
@@ -150,7 +141,4 @@ __all__ = (
     "CBFuse",
     "CBLinear",
     "Silence",
-    "GAM_Attention",
-    "SPPFCSPC",
-    "space_to_depth",
 )
