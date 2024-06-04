@@ -7,6 +7,7 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 
+
 from ultralytics.nn.modules import (
     AIFI,
     C1,
@@ -15,9 +16,14 @@ from ultralytics.nn.modules import (
     C3TR,
     OBB,
     SPP,
+    space_to_depth,
     SPPELAN,
     SPPF,
+<<<<<<< HEAD
+    SPPFCPSC,
+=======
     SPPFCSPC,
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
     ADown,
     Bottleneck,
     BottleneckCSP,
@@ -26,6 +32,7 @@ from ultralytics.nn.modules import (
     C3Ghost,
     C3x,
     CBFuse,
+    CBAM,
     CBLinear,
     Classify,
     Concat,
@@ -50,9 +57,13 @@ from ultralytics.nn.modules import (
     Segment,
     Silence,
     WorldDetect,
+<<<<<<< HEAD
+    ResBlock_CBAM,
+=======
     GAM_Attention,
     CBAM,
     space_to_depth,
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
 )
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, colorstr, emojis, yaml_load
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
@@ -872,7 +883,11 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             SPPFCSPC,
             SPP,
             SPPF,
+<<<<<<< HEAD
+            SPPFCPSC,
+=======
             SPPFCSPC,
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
             DWConv,
             Focus,
             BottleneckCSP,
@@ -886,15 +901,21 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             C3,
             C3TR,
             C3Ghost,
+            ResBlock_CBAM,
             nn.ConvTranspose2d,
             DWConvTranspose2d,
             C3x,
             RepC3,
+<<<<<<< HEAD
+            RepConv
+=======
             GAM_Attention,
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
         }:
             c1, c2 = ch[f], args[0]
             if c2 != nc:  # if c2 not equal to number of classes (i.e. for Classify() output)
                 c2 = make_divisible(min(c2, max_channels) * width, 8)
+            
             if m is C2fAttn:
                 args[1] = make_divisible(min(args[1], max_channels // 2) * width, 8)  # embed channels
                 args[2] = int(
@@ -919,6 +940,13 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             args = [ch[f]]
         elif m is Concat:
             c2 = sum(ch[x] for x in f)
+        elif m is space_to_depth:
+            c2 = 4*ch[f]
+        elif m is CBAM:
+            c1, c2 = ch[f], args[0]
+            if c2 != nc:
+                c2 = make_divisible(min(c2, max_channels) * width, 8)
+            args = [c1, *args[1:]]
         elif m in {Detect, WorldDetect, Segment, Pose, OBB, ImagePoolingAttn}:
             args.append([ch[x] for x in f])
             if m is Segment:
@@ -931,6 +959,9 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             args = [c1, c2, *args[1:]]
         elif m is CBFuse:
             c2 = ch[f[-1]]
+<<<<<<< HEAD
+        
+=======
         elif m is CBAM:
             c1, c2 = ch[f], args[0]
             if c2 != nc:
@@ -938,6 +969,7 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             args = [c1, *args[1:]]
         elif m is space_to_depth:
             c2 = 4 * ch[f]
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
         else:
             c2 = ch[f]
 
@@ -1082,3 +1114,4 @@ def guess_model_task(model):
         "Explicitly define task for your model, i.e. 'task=detect', 'segment', 'classify','pose' or 'obb'."
     )
     return "detect"  # assume detect
+

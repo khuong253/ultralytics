@@ -26,7 +26,12 @@ from .block import (
     SPP,
     SPPELAN,
     SPPF,
+<<<<<<< HEAD
+    SPPFCPSC,
+    space_to_depth,
+=======
     SPPFCSPC,
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
     ADown,
     BNContrastiveHead,
     Bottleneck,
@@ -62,8 +67,12 @@ from .conv import (
     LightConv,
     RepConv,
     SpatialAttention,
+<<<<<<< HEAD
+    ResBlock_CBAM,
+=======
     GAM_Attention,
     space_to_depth,
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
 )
 from .head import OBB, Classify, Detect, Pose, RTDETRDecoder, Segment, WorldDetect
 from .transformer import (
@@ -85,6 +94,7 @@ __all__ = (
     "LightConv",
     "RepConv",
     "DWConv",
+    "space_to_depth",
     "DWConvTranspose2d",
     "ConvTranspose",
     "Focus",
@@ -92,6 +102,7 @@ __all__ = (
     "ChannelAttention",
     "SpatialAttention",
     "CBAM",
+    "ResBlock_CBAM"
     "Concat",
     "TransformerLayer",
     "TransformerBlock",
@@ -102,6 +113,7 @@ __all__ = (
     "HGStem",
     "SPP",
     "SPPF",
+    "SPPFCPSC"
     "C1",
     "C2",
     "C3",

@@ -21,9 +21,13 @@ __all__ = (
     "CBAM",
     "Concat",
     "RepConv",
+<<<<<<< HEAD
+    "ResBlock_CBAM"
+=======
     "GAM_Attention",
     "SPPFCSPC",
     "space_to_depth",
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
 )
 
 
@@ -292,10 +296,10 @@ class ChannelAttention(nn.Module):
         """Applies forward pass using activation on convolutions of the input, optionally using batch normalization."""
         return x * self.act(self.fc(self.pool(x)))
 
-
+    
 class SpatialAttention(nn.Module):
     """Spatial-attention module."""
-
+  
     def __init__(self, kernel_size=7):
         """Initialize Spatial-attention module with kernel size argument."""
         super().__init__()
@@ -335,6 +339,49 @@ class Concat(nn.Module):
         """Forward pass for the YOLOv8 mask Proto module."""
         return torch.cat(x, self.d)
 
+<<<<<<< HEAD
+
+class ResBlock_CBAM(nn.Module):
+    def __init__(self, in_places, places, stride=1, downsampling=False, expansion=1):
+        super(ResBlock_CBAM, self).__init__()
+        self.expansion = expansion
+        self.downsampling = downsampling
+
+        self.bottleneck = nn.Sequential(
+            nn.Conv2d(in_channels=in_places, out_channels=places, kernel_size=1, stride=1, bias=False),
+            nn.BatchNorm2d(places),
+            nn.LeakyReLU(0.1, inplace=True),
+            nn.Conv2d(in_channels=places, out_channels=places, kernel_size=3, stride=stride, padding=1, bias=False),
+            nn.BatchNorm2d(places),
+            nn.LeakyReLU(0.1, inplace=True),
+            nn.Conv2d(in_channels=places, out_channels=places * self.expansion, kernel_size=1, stride=1,
+                      bias=False),
+            nn.BatchNorm2d(places * self.expansion),
+        )
+        # self.cbam = CBAM(c1=places * self.expansion, c2=places * self.expansion, )
+        self.cbam = CBAM(c1=places * self.expansion)
+
+        if self.downsampling:
+            self.downsample = nn.Sequential(
+                nn.Conv2d(in_channels=in_places, out_channels=places * self.expansion, kernel_size=1, stride=stride,
+                          bias=False),
+                nn.BatchNorm2d(places * self.expansion)
+            )
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, x):
+        residual = x
+        out = self.bottleneck(x)
+        out = self.cbam(out)
+        if self.downsampling:
+            residual = self.downsample(x)
+
+        out += residual
+        out = self.relu(out)
+        return out
+
+
+=======
 def channel_shuffle(x, groups=2):  ##shuffle channel
     # RESHAPE----->transpose------->Flatten
     B, C, H, W = x.size()
@@ -417,3 +464,4 @@ class space_to_depth(nn.Module):
         #                   x[...,0:size_tensor[2]//2,size_tensor[3]//2:],
         #                   x[...,size_tensor[2]//2:,0:size_tensor[3]//2],
         #                   x[...,size_tensor[2]//2:,size_tensor[3]//2:]  ],1)
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186

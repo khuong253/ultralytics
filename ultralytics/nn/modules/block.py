@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .conv import Conv, DWConv, GhostConv, LightConv, RepConv, autopad
+from .conv import Conv, DWConv, GhostConv, LightConv, RepConv, autopad, CBAM
 from .transformer import TransformerBlock
 
 __all__ = (
@@ -13,8 +13,13 @@ __all__ = (
     "HGBlock",
     "HGStem",
     "SPP",
+    "space_to_depth",
     "SPPF",
+<<<<<<< HEAD
+    "SPPFCPSC",
+=======
     "SPPFCSPC",
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
     "C1",
     "C2",
     "C3",
@@ -40,7 +45,14 @@ __all__ = (
     "Silence",
 )
 
+class space_to_depth(nn.Module):
+    # Changing the dimension of the Tensor
+    def __init__(self, dimension=1):
+        super().__init__()
+        self.d = dimension
 
+    def forward(self, x):
+         return torch.cat([x[..., ::2, ::2], x[..., 1::2, ::2], x[..., ::2, 1::2], x[..., 1::2, 1::2]], 1)
 class DFL(nn.Module):
     """
     Integral module of Distribution Focal Loss (DFL).
@@ -176,10 +188,17 @@ class SPPF(nn.Module):
         y.extend(self.m(y[-1]) for _ in range(3))
         return self.cv2(torch.cat(y, 1))
 
+<<<<<<< HEAD
+class SPPFCPSC(nn.Module):
+    
+    def __init__(self, c1, c2, k=5):
+        super(SPPFCPSC, self).__init__()
+=======
 class SPPFCSPC(nn.Module):
     
     def __init__(self, c1, c2, k=5):
         super(SPPFCSPC, self).__init__()
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
         c_ = c1//2  # hidden channels
         self.cv1 = Conv(c1, c_, 1, 1)
         self.cv2 = Conv(c1, c_, 1, 1)
@@ -197,6 +216,12 @@ class SPPFCSPC(nn.Module):
         y1 = self.cv6(self.cv5(torch.cat((x1,x2,x3, self.m(x3)),1)))
         y2 = self.cv2(x)
         return self.cv7(torch.cat((y1, y2), dim=1))
+<<<<<<< HEAD
+
+
+    
+=======
+>>>>>>> 3f8a41ac08b1d9caf8f6c4a84efe678780b0b186
 
 class C1(nn.Module):
     """CSP Bottleneck with 1 convolution."""
